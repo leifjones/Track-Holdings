@@ -35,7 +35,9 @@ Roadmap
 * Read transaction data
 * Create objects to represent holdings
 * Track price of each holding
+
 0.2
 * Allow for starting positions
+
 0.3
 * Differentiate Long-Term and Short-term gains/losses
