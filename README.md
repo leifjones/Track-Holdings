@@ -50,6 +50,7 @@ Roadmap
 
 0.2
 * Allow for starting positions
+* Report amount that this adds to tax owed to IRS based on tax bracket
 
 0.3
 * Differentiate Long-Term and Short-term gains/losses
