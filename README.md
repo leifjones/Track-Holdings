@@ -19,9 +19,9 @@ This will be most applicable to the situation of someone who buys and sells bitc
 Further Context
 ---------------
 In the United States, an exchange of goods for USD is an event with tax concequences. As I understand it, an individual can choose to calculate gains and losses with regard to such exchange(s) of goods using one of three methods:
-1) "first-in-first-out" (FIFO)
-2) "last-in-first-out" (LIFO)
-3) "average"
+1. "first-in-first-out" (FIFO)
+2. "last-in-first-out" (LIFO)
+3. "average"
 
 Calculating any of these by hand (or even with a spreadsheet) can be quite tedious. If your number of transactions is greater than a dozen, software proves necessary. I have come across some attempts to automate this - but none that have clearly delineated outcomes for FIFO, LIFO, and average calculations. This is my attempt to make what I'm looking for ... and learn som Python at the same time!!
 
