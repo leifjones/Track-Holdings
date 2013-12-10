@@ -29,7 +29,7 @@ Calculating any of these by hand (or even with a spreadsheet) can be quite tedio
 
 Because I purchased and sold amounts of bitcoin this year (2013), I want a way to choose a calculation method and to accurately figure my gain/loss. This is my attempt at creating a program to accomplish such.
 
-BTC donations accepted: <address to be posted>
+BTC donations accepted: 1A6ujnfh6B3y82DzjWrs2vcpcFPFF13We6
 
 Goals: Track holdings of commodity/currency/stock/etc. to report gains/losses
 Limitations: Not intended for exchange between multiple currencies
