@@ -114,8 +114,8 @@ def removeFromHoldings_fifo(t):
             # if exactly enough, remove first holding & done w/ removing holdings
             # if so, subtract, update first holding, & done w/ removing holdings
             # if not, updtate sought quantity to difference., remove first, repeat
-            # if none left, error(ran out of holdings / suggest 
-    pass
+            # if none left, error(ran out of holdings / suggest
+        transactionFullyAccountedFor = True
 
 def removeFromHoldings_lifo(t):
     quantity = t.getQuant()
@@ -128,7 +128,7 @@ def removeFromHoldings_lifo(t):
             # if exactly enough, remove last holding & done w/ removing holdings
             # if so, subtract, update last holding, & done w/ removing holdings
             # if not, updtate sought quantity to difference., remove last, repeat
-    pass
+        transactionFullyAccountedFor = True
 
 def removeFromHoldings_avg(t):
     quantity = t.getQuant()
@@ -146,7 +146,7 @@ def removeFromHoldings_avg(t):
             # ????? to update price
             # subtract quant from leftToProcess variable
         #check wether leftToProcess variable = 0. if not, error
-    pass
+        transactionFullyAccountedFor = True
 
 # Calculate gain/loss
 
@@ -175,7 +175,13 @@ for i in transactions:
     if quantity > 0:
         addToHoldings(i)
     else:
-        removeFromHoldings(i)
+        removeFromHoldings_fifo(i)
+        removeFromHoldings_lifo(i)
+        removeFromHoldings_avg(i)
+
+# Print or write summary
+# ...
+
 
 print "Current holdings: " + str(total_holdings) + " BTC. If this does not match your current holdings, there is a transaction missing."
 
