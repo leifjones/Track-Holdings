@@ -19,6 +19,9 @@ C: Fee (Amount paid to the Exchange company)
 D: Other fee (e.g. bank fee) (Enter 0 if none.)
 E: Datetime (Format TBD)
 F,G,...: Optional other details (e.g. which exchange used, other comment)
+
+In order for FIFO and LIFO to methods to be calculated currectly, transactions must be listed in the CSV by ascending order chronologoically.
+(Oldest transactions first. Newest transactions last.
 '''
 
 import csv
@@ -59,6 +62,15 @@ class Holding:
         self.basis = b
         self.basisWithFees = bwf
 
+    def getQuant(self):
+        return self.quantity
+    def getBasis(self):
+        return self.basis
+    def getBWF(self):
+        return self.basisWithFees
+
+# AvgHolding class extends Holding class, adding weight
+
 holdings_fifo = []
 holdings_lifo = []
 holdings_avg = []
@@ -84,15 +96,62 @@ def addToHoldings(t):
     quantity = t.getQuant()
     price = t.getPrice()
     fee = t.getFee()
-    priceWithFeesPerUnit = round(((price*quantity) + fee) / qunatity, 8)
+    priceWithFeesPerUnit = round(((price*quantity) + fee) / quantity, 8)
     h = Holding(quantity,price,priceWithFeesPerUnit)
     holdings_fifo.append(h)
     holdings_lifo.append(h)
     # add to average
 
 # Remove
-def removeFromHoldings(t):
+def removeFromHoldings_fifo(t):
+    quantity = t.getQuant()
+    price = t.getPrice()
+    fee = t.getFee()
+    
+    transactionFullyAccountedFor = False
+    while transactionFullyAccountedFor != True:
+        # Check if there are enough in first holding
+            # if exactly enough, remove first holding & done w/ removing holdings
+            # if so, subtract, update first holding, & done w/ removing holdings
+            # if not, updtate sought quantity to difference., remove first, repeat
+            # if none left, error(ran out of holdings / suggest 
     pass
+
+def removeFromHoldings_lifo(t):
+    quantity = t.getQuant()
+    price = t.getPrice()
+    fee = t.getFee()
+    
+    transactionFullyAccountedFor = False
+    while transactionFullyAccountedFor != True:
+        # Check if there are enough in last holding
+            # if exactly enough, remove last holding & done w/ removing holdings
+            # if so, subtract, update last holding, & done w/ removing holdings
+            # if not, updtate sought quantity to difference., remove last, repeat
+    pass
+
+def removeFromHoldings_avg(t):
+    quantity = t.getQuant()
+    price = t.getPrice()
+    fee = t.getFee()
+
+    # assign proportional portions of the transaction to each holding:
+    
+    # update holdings
+    transactionFullyAccountedFor = False
+    while transactionFullyAccountedFor != True:
+        # for each AvgHolding in list:
+            # multiply(each.getWeight(), quantity)
+            # subtract that value from the AvgHolding.quantity
+            # ????? to update price
+            # subtract quant from leftToProcess variable
+        #check wether leftToProcess variable = 0. if not, error
+    pass
+
+# Calculate gain/loss
+
+# known error
+# 1: Ran out of holdings to complete transaction (report line # from CSV). Suggestion: Is there an un accounted for donation?
 
 # Write
 # write (starting and) final holdings
@@ -118,6 +177,8 @@ for i in transactions:
     else:
         removeFromHoldings(i)
 
+print "Current holdings: " + str(total_holdings) + " BTC. If this does not match your current holdings, there is a transaction missing."
+
 #troubleshooting
 index = 1
 
@@ -125,4 +186,5 @@ for t in transactions:
     print str(index) + ": Quantity: " + str(t.quantity) + "\n"
     index += 1
 
-print "Current holdings: " + str(total_holdings) + " BTC. If this does not match your current holdings, there is a transaction missing."
+
+print holdings_fifo[1].getBasis()
