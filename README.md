@@ -1,8 +1,8 @@
 Track-Holdings Aplha (Pre-0.1)
 ==============================
 
-#### Disclaimer
-_Under no circumstances does this tool serve as a substitute for the professional advice of an accountant and/or your own research, calculations, and decision-making._
+#### DISCLAIMER
+_Under *no circumstances* does this tool serve as a substitute for the professional advice of an accountant and your own research, calculations, and decision-making._
 
 Primary Objective
 -----------------
@@ -18,6 +18,8 @@ This will be most applicable to the situation of someone who buys and sells bitc
 
 Further Context
 ---------------
+I am the son of an certified public accountant. I worked as a tax preparer for a tax-prep franchise in the United States. Beyond these experiences, I have had no formal financial training; see disclaimer above.
+
 In the United States, an exchange of goods for USD is an event with tax concequences. As I understand it, an individual can choose to calculate gains and losses with regard to such exchange(s) of goods using one of three methods:
 1. "first-in-first-out" (FIFO)
 2. "last-in-first-out" (LIFO)
@@ -25,7 +27,7 @@ In the United States, an exchange of goods for USD is an event with tax conceque
 
 Calculating any of these by hand (or even with a spreadsheet) can be quite tedious. If your number of transactions is greater than a dozen, software proves necessary. I have come across some attempts to automate this - but none that have clearly delineated outcomes for FIFO, LIFO, and average calculations. This is my attempt to make what I'm looking for ... and learn som Python at the same time!!
 
-Because I purchased and sold amounts of bitcoin this year (2013), I want a way to choose a calculation method and to accurately figure my gain. This is my attempt at creating a program to accomplish such.
+Because I purchased and sold amounts of bitcoin this year (2013), I want a way to choose a calculation method and to accurately figure my gain/loss. This is my attempt at creating a program to accomplish such.
 
 BTC donations accepted: <address to be posted>
 
