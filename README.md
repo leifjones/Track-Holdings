@@ -18,7 +18,7 @@ This will be most applicable to the situation of someone who buys and sells bitc
 
 Further Context
 ---------------
-I am the son of an certified public accountant. I worked as a tax preparer for a tax-prep franchise in the United States. Beyond these experiences, I have had no formal financial training; see disclaimer above.
+I am the child of an certified public accountant. I worked as a tax preparer for a tax-prep franchise in the United States. Beyond these experiences, I have had no formal financial training; see disclaimer above.
 
 In the United States, an exchange of goods for USD is an event with tax concequences. As I understand it, an individual can choose to calculate gains and losses with regard to such exchange(s) of goods using one of three methods:
 1. "first-in-first-out" (FIFO)
