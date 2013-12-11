@@ -54,3 +54,31 @@ Roadmap
 
 0.3
 * Differentiate Long-Term and Short-term gains/losses
+
+1.0
+<ul>
+  <li>Standalone format. Options being considered:
+    <ul>
+      <li>Webapp
+        <ul>
+          <li>Pros:
+            <ul>
+              <li>Google Spreadsheet integration via Google Apps Script</li>
+              <li>In-browser, accessible anywhere, on any device</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>Java
+        <ul>
+          <li>Pros:
+            <ul>
+              <li>Works on any desktop OS</li>
+              <li>Internet connection not necessary</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
