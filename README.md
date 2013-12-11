@@ -55,6 +55,9 @@ Roadmap
 0.3
 * Differentiate Long-Term and Short-term gains/losses
 
+0.4
+* Explicit function to project gain/loss implications of a transaction
+
 1.0
 <ul>
   <li>Standalone format. Options being considered:
