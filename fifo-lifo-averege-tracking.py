@@ -16,7 +16,7 @@ A,B,C,D,E,F...
 A: Quantity of BTC purchased/sold
 B: Price in USD
 C: Fee (Amount paid to the Exchange company)
-D: Other fee (e.g. bank fee) (Enter 0 if none.)
+D: Other fee (Fee not included in cost basis, e.g. bank fee) (Enter 0 if none.)
 E: Datetime (Format TBD)
 F,G,...: Optional other details (e.g. which exchange used, other comment)
 
@@ -69,6 +69,9 @@ class Holding:
     def getBWF(self):
         return self.basisWithFees
 
+    def setQuant(self,newQuant):
+        self.quantity = newQuant
+
 # AvgHolding class extends Holding class, adding weight
 
 holdings_fifo = []
@@ -83,11 +86,11 @@ def read():
     reader = csv.reader(ifile)
 
     for row in reader:
-        quantity = row[0]
-        price = row[1]
-        commission = row[2]
-        fee = row[3]
-        t = Transaction(quantity,price,commission,fee)
+        quantity = row[0] # first collumn
+        price = row[1] # 2nd collomn
+        fee = row[2] # 3rd
+        otherfee = row[3] # 4th
+        t = Transaction(quantity,price,fee,otherfee)
         transactions.append(t)
 
 
@@ -104,7 +107,7 @@ def addToHoldings(t):
 
 # Remove
 def removeFromHoldings_fifo(t):
-    quantity = t.getQuant()
+    quantity = -t.getQuant() # Negative sign because sales are entered as negative. Take postive value for local handling.
     price = t.getPrice()
     fee = t.getFee()
     
@@ -112,10 +115,16 @@ def removeFromHoldings_fifo(t):
     while transactionFullyAccountedFor != True:
         # Check if there are enough in first holding
             # if exactly enough, remove first holding & done w/ removing holdings
-            # if so, subtract, update first holding, & done w/ removing holdings
-            # if not, updtate sought quantity to difference., remove first, repeat
-            # if none left, error(ran out of holdings / suggest
-        transactionFullyAccountedFor = True
+        if holdings_fifo[0].getQuant() == quantity:
+            holdings_fifo.pop[0]
+            transactionFullyAccountedFor = True # Done with removing.
+        else if quantity < holdings_fifo[0].getQuant():
+            holdings_fifo[0].setQuant(holdings_fifo[0].getQuant()-quantity)
+            transactionFullyAccountedFor = True # Done with removing.
+        else: # Quantity sold exceeds value of the first remaining holding
+            quantity -= holdings_fifo[0].getQuant()
+            holdings_fifo.pop[0]
+            # NOT done with removing. Cycle back around.
 
 def removeFromHoldings_lifo(t):
     quantity = t.getQuant()
@@ -124,11 +133,18 @@ def removeFromHoldings_lifo(t):
     
     transactionFullyAccountedFor = False
     while transactionFullyAccountedFor != True:
-        # Check if there are enough in last holding
-            # if exactly enough, remove last holding & done w/ removing holdings
-            # if so, subtract, update last holding, & done w/ removing holdings
-            # if not, updtate sought quantity to difference., remove last, repeat
-        transactionFullyAccountedFor = True
+        # Check if there are enough in first holding
+            # if exactly enough, remove first holding & done w/ removing holdings
+        if holdings_fifo[-1].getQuant() == quantity:
+            holdings_fifo.pop[-1]
+            transactionFullyAccountedFor = True # Done with removing.
+        else if quantity < holdings_fifo[-1].getQuant():
+            holdings_fifo[0].setQuant(holdings_fifo[-1].getQuant()-quantity)
+            transactionFullyAccountedFor = True # Done with removing.
+        else: # Quantity sold exceeds value of the first remaining holding
+            quantity -= holdings_fifo[-1].getQuant()
+            holdings_fifo.pop[-1]
+            # NOT done with removing. Cycle back around.
 
 def removeFromHoldings_avg(t):
     quantity = t.getQuant()
