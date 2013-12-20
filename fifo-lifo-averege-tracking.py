@@ -16,7 +16,7 @@ A,B,C,D,E,F...
 A: Quantity of BTC purchased/sold
 B: Price in USD
 C: Fee (Amount paid to the Exchange company)
-D: Other fee (Fee not included in cost basis, e.g. bank fee) (Enter 0 if none.)
+D: Transfer costs (E.g. bank fee to include for your info) (Enter 0 if none.)
 E: Datetime (Format TBD)
 F,G,...: Optional other details (e.g. which exchange used, other comment)
 
@@ -29,27 +29,37 @@ import math
 
 # Validation??
 
-'''
-# round to 8 decimal places
-def round(num):
-    return math.ceil(num*100000000)/100000000
-'''
+
+# round to X decimal places
+def myRound(num,base):
+    return float( round( num * (10**base) ) ) / (10**base)
 
 # transaction class
 class Transaction:
-    def __init__(self,q,p,f,of):
-        self.quantity = round(float(q),8) #BTC
+    def __init__(self,q,p,f,xf):
+        self.quantity = myRound(float(q),8) #BTC
         self.price = float(p) # USD per BTC
         self.fee = float(f) # in USD
-        self.otherFee = of # For example, bank transfer fee. Not part of cost basis. (in USD)
+        self.xfer = float(xf) # For example, bank transfer fee. Not part of cost basis. (in USD)
         # self.date = d
+        # self.id = id # id number
+
+    def __repr__(self):
+        if self.quantity == 0:
+            return "Empty transaction!"
+        elif self.quantity > 0:
+            return "Buy: {} BTC for a price of ${} per bitcoin.".format(str(self.quantity),str(self.price))
+        else:
+            return "Sale: {} BTC at price of ${} per bitcoin.".format(str(self.quantity),str(self.price))
 
     def getQuant(self):
         return self.quantity
     def getPrice(self):
         return self.price
-    def getFee(self):
-        return self.fee    
+    def getTotalFees(self):
+        return self.fee +self.xfer
+
+    
 
 transactions = []
 
@@ -58,9 +68,9 @@ transactions = []
 class Holding:
     def __init__(self,q,b,bwf):
         # self.id = ???
-        self.quantity = q
-        self.basis = b
-        self.basisWithFees = bwf
+        self.quantity = myRound(float(q),8)
+        self.basis = float(b) #per unit
+        self.basisWithFees = float(bwf) # per unit
 
     def getQuant(self):
         return self.quantity
@@ -70,7 +80,11 @@ class Holding:
         return self.basisWithFees
 
     def setQuant(self,newQuant):
-        self.quantity = newQuant
+        self.quantity = myRound(float(newQuant),8)
+
+    def subtractX(self,toSubtract): # ONLY USE WHEN AMOUNT SUBTRACTING IS LESS THAN self.quantity
+        self.quantity -= myRound(float(toSubtract),8)
+        # Optionally include some validation
 
 # AvgHolding class extends Holding class, adding weight
 
@@ -82,15 +96,17 @@ holdings_avg = []
 
 # Read
 def read():
+    print "READING TRANSACTIONS FILE ..."
     ifile  = open('sample-transactions.csv', "rU")
     reader = csv.reader(ifile)
 
+    print "GENERATING TRANSACTION list ..."
     for row in reader:
         quantity = row[0] # first collumn
         price = row[1] # 2nd collomn
         fee = row[2] # 3rd
-        otherfee = row[3] # 4th
-        t = Transaction(quantity,price,fee,otherfee)
+        xfer = row[3] # 4th
+        t = Transaction(quantity,price,fee,xfer)
         transactions.append(t)
 
 
@@ -98,58 +114,72 @@ def read():
 def addToHoldings(t):
     quantity = t.getQuant()
     price = t.getPrice()
-    fee = t.getFee()
-    priceWithFeesPerUnit = round(((price*quantity) + fee) / quantity, 8)
+    totalFees = t.getTotalFees()
+    priceWithFeesPerUnit = myRound(((price*quantity) + totalFees) / quantity, 8)
     h = Holding(quantity,price,priceWithFeesPerUnit)
     holdings_fifo.append(h)
+    h = Holding(quantity,price,priceWithFeesPerUnit) # Re-initial to append new object, rather than reference to original
     holdings_lifo.append(h)
-    # add to average
+    h = Holding(quantity,price,priceWithFeesPerUnit) # Re-initial to append new object, rather than reference to original
+    holdings_avg.append(h)
 
 # Remove
 def removeFromHoldings_fifo(t):
     quantity = -t.getQuant() # Negative sign because sales are entered as negative. Take postive value for local handling.
     price = t.getPrice()
-    fee = t.getFee()
+    fees = t.getTotalFees()
     
     transactionFullyAccountedFor = False
     while transactionFullyAccountedFor != True:
         # Check if there are enough in first holding
             # if exactly enough, remove first holding & done w/ removing holdings
-        if holdings_fifo[0].getQuant() == quantity:
-            holdings_fifo.pop[0]
+        holdingQuant = holdings_fifo[0].getQuant()
+        if holdingQuant == quantity:
+            print "Quantity matches amt in first holding. REMOVING ..."
+            holdings_fifo.pop(0)
             transactionFullyAccountedFor = True # Done with removing.
-        else if quantity < holdings_fifo[0].getQuant():
-            holdings_fifo[0].setQuant(holdings_fifo[0].getQuant()-quantity)
+        elif quantity < holdingQuant:
+            print "Quantity is smaller than amt in first holding. SUBTRACTING ..."
+            print "Holding value was {}. SUBTRACTING {} ...".format(str(holdingQuant),str(quantity))
+            holdings_fifo[0].subtractX(quantity)
+            print "Holding value is now {}.".format(str(holdings_fifo[0].getQuant()))
             transactionFullyAccountedFor = True # Done with removing.
         else: # Quantity sold exceeds value of the first remaining holding
+            print "Quantity excedes amt in first holding. REMOVING and REPEATING ..."
             quantity -= holdings_fifo[0].getQuant()
-            holdings_fifo.pop[0]
-            # NOT done with removing. Cycle back around.
+            holdings_fifo.pop(0)
+            # NOT done with removing. Continue.
 
 def removeFromHoldings_lifo(t):
-    quantity = t.getQuant()
+    quantity = -t.getQuant() # Negative sign because sales are entered as negative. Take postive value for local handling.
     price = t.getPrice()
-    fee = t.getFee()
+    fees = t.getTotalFees()
     
     transactionFullyAccountedFor = False
     while transactionFullyAccountedFor != True:
         # Check if there are enough in first holding
             # if exactly enough, remove first holding & done w/ removing holdings
-        if holdings_fifo[-1].getQuant() == quantity:
-            holdings_fifo.pop[-1]
+        holdingQuant = holdings_lifo[-1].getQuant()
+        if holdingQuant == quantity:
+            print "Quantity matches amt in last holding. REMOVING ..."
+            holdings_lifo.pop(-1)
             transactionFullyAccountedFor = True # Done with removing.
-        else if quantity < holdings_fifo[-1].getQuant():
-            holdings_fifo[0].setQuant(holdings_fifo[-1].getQuant()-quantity)
+        elif quantity < holdingQuant:
+            print "Quantity is smaller than amt in last holding. SUBTRACTING ..."
+            print "Holding value was {}. SUBTRACTING {} ...".format(str(holdingQuant),str(myRound(quantity,8)))
+            holdings_lifo[-1].subtractX(quantity)
+            print "Holding value is now {}.".format(str(holdings_lifo[-1].getQuant()))
             transactionFullyAccountedFor = True # Done with removing.
         else: # Quantity sold exceeds value of the first remaining holding
-            quantity -= holdings_fifo[-1].getQuant()
-            holdings_fifo.pop[-1]
-            # NOT done with removing. Cycle back around.
+            print "Quantity excedes amt in last holding. REMOVING and REPEATING ..."
+            quantity -= holdingQuant
+            holdings_lifo.pop(-1)
+            # NOT done with removing. Continue.
 
 def removeFromHoldings_avg(t):
-    quantity = t.getQuant()
+    quantity = -t.getQuant() # Negative sign because sales are entered as negative. Take postive value for local handling.
     price = t.getPrice()
-    fee = t.getFee()
+    fees = t.getTotalFees()
 
     # assign proportional portions of the transaction to each holding:
     
@@ -161,7 +191,7 @@ def removeFromHoldings_avg(t):
             # subtract that value from the AvgHolding.quantity
             # ????? to update price
             # subtract quant from leftToProcess variable
-        #check wether leftToProcess variable = 0. if not, error
+        #check whether leftToProcess variable = 0. if not, error
         transactionFullyAccountedFor = True
 
 # Calculate gain/loss
@@ -174,6 +204,11 @@ def removeFromHoldings_avg(t):
 # write gain or loss
 
 # report
+def printHoldings(list):
+    i = 1
+    for holding in list:
+        print "{0}. Number of units: {1:14}   Basis cost in USD per unit: {2:10}".format(i,holding.getQuant(),holding.getBasis())
+        i += 1
 
 
 
@@ -185,19 +220,48 @@ read()
 # PROCESS TRANSACTIONS
 total_holdings = 0
 
+transactionNum = 1
 for i in transactions:
+    print "PROCESSING TRANSACTION #{} ...".format(str(transactionNum))
+    print i
     quantity = i.getQuant()
     total_holdings += quantity # Update holdings
     if quantity > 0:
+        print "Transaction #{} is a buy. ADDING TO HOLDINGS ...".format(str(transactionNum))
         addToHoldings(i)
     else:
+        print "Transaction #{} is a sell. SUBTRACTING FROM HOLDINGS ...".format(str(transactionNum))
+        print "Starting rfh-FIFO..."
         removeFromHoldings_fifo(i)
+        print "\nStarting rfh-LIFO..."
         removeFromHoldings_lifo(i)
+        print "\nStarting rfh-AVG..."
         removeFromHoldings_avg(i)
+    
+    print "FIFO"
+    printHoldings(holdings_fifo)
+    # Calculate and print gain/loss
+    print "LIFO"
+    printHoldings(holdings_lifo)
+    # Calculate and print gain/loss
+    print "Average"
+    printHoldings(holdings_avg)
+    # Calculate and print gain/loss
+
+    transactionNum += 1
+    
+    # Update gain/loss without fees
+    # Update gain/loss with fees
 
 # Print or write summary
-# ...
-
+'''
+print "FIFO"
+printHoldings(holdings_fifo)
+print "LIFO"
+printHoldings(holdings_lifo)
+print "Average"
+printHoldings(holdings_avg)
+'''
 
 print "Current holdings: " + str(total_holdings) + " BTC. If this does not match your current holdings, there is a transaction missing."
 
@@ -209,4 +273,4 @@ for t in transactions:
     index += 1
 
 
-print holdings_fifo[1].getBasis()
+# print holdings_fifo[1].getBasis()
