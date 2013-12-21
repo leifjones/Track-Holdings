@@ -4,9 +4,10 @@ Track-Holdings Alpha (Pre-0.1)
 #### DISCLAIMER
 _While I make every effort to provide an quality script, I make no assurances. Under *no circumstances* does this tool serve as a substitute for the professional advice of an accountant and your own research, calculations, and decision-making. By using this tool, you claim all responsibility for the results of choices made after using this tool._
 
-Primary Objective
------------------
-Determine gain/loss by FIFO, LIFO, and Average methods associated with exchanges between bitcoin and US dollars.
+Primary Objectives
+------------------
+1. Determine gain/loss by FIFO, LIFO, and Average methods associated with exchanges between bitcoin and US dollars.
+2. Provide a tool that I believe should be free. (_Currently society's structure makes it easier to invest [read "maintain or increase individual wealth with respect to the economy"] if one already has money. This service is currenly only available in paid-for products. Because it is within my abilities to create this, I feel a responsibility to do so._)
 
 Scope
 -----
@@ -21,6 +22,7 @@ Further Context
 I am the child of an certified public accountant. I worked as a tax preparer for a tax-prep franchise in the United States. Beyond these experiences, I have had no formal financial training; see disclaimer above.
 
 In the United States, an exchange of goods for USD is an event with tax concequences. As I understand it, an individual can choose to calculate gains and losses with regard to such exchange(s) of goods using one of three methods:
+
 1. "first-in-first-out" (FIFO)
 2. "last-in-first-out" (LIFO)
 3. "average"
@@ -44,22 +46,32 @@ Current Outline of Program
 Roadmap
 -------
 0.1
-* Read transaction data
-* Create objects to represent holdings
-* Track price of each holding
+* ~~Read transaction data~~
+* ~~Create objects to represent holdings~~
+* Track price of each holding: ~~FIFO~~, ~~LIFO~~, AVG
+* Report gain/loss: FIFO, LIFO, AVG
 
 0.2
 * Allow for starting positions
-* Report amount that this adds to tax owed to IRS based on tax bracket
+* Report amount that current scenario adds to (or reduces) tax owed to IRS based on assumed tax bracket
 
 0.3
 * Differentiate Long-Term and Short-term gains/losses
+* Report amount that current scenario adds to (or reduces) tax owed to IRS based on user's tax bracket
 
 0.4
+* Explicit function to choose fiat (taxable) currency and security type
 * Explicit function to project gain/loss implications of a transaction
+
+0.5
+* Simultaneous handling of multiple fiat <---> security pairs
+
+0.6
+* Offer option(s) for tracking fiat gain/loss when there are exchanges BETWEEN different securities. (E.g. bitcoin <---> betacoin or ¥ <---> €)
 
 1.0
 <ul>
+  <li>GUI</li>
   <li>Standalone format. Options being considered:
     <ul>
       <li>Webapp
