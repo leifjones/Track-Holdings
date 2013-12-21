@@ -95,7 +95,7 @@ Roadmap
           </li>
           <li>Cons:
             <ul>
-              <li>If Steve Jobs's is right (or if his opinion wins out), Java's relevancy will diminish over time.</li>
+              <li>If Steve Jobs was right (or if his opinion wins out), Java's relevancy will diminish over time.</li>
             </ul>
           </li>
         </ul>
