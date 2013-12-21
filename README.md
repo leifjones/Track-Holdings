@@ -1,8 +1,8 @@
-Track-Holdings Aplha (Pre-0.1)
+Track-Holdings Alpha (Pre-0.1)
 ==============================
 
 #### DISCLAIMER
-_Under *no circumstances* does this tool serve as a substitute for the professional advice of an accountant and your own research, calculations, and decision-making._
+_While I make every effort to provide an quality script, I make no assurances. Under *no circumstances* does this tool serve as a substitute for the professional advice of an accountant and your own research, calculations, and decision-making. By using this tool, you claim all responsibility for the results of choices made after using this tool._
 
 Primary Objective
 -----------------
