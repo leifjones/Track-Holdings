@@ -7,7 +7,7 @@ _While I make every effort to provide an quality script, I make no assurances. U
 Primary Objectives
 ------------------
 1. Determine gain/loss by FIFO, LIFO, and Average methods associated with exchanges between bitcoin and US dollars.
-2. Provide a tool that I believe should be free. (_Currently society's structure makes it easier to invest [read "maintain or increase individual wealth with respect to the economy"] if one already has money. This service is currenly only available in paid-for products. Because it is within my abilities to create this, I feel a responsibility to do so._)
+2. Provide a tool that I believe should be free.
 
 Scope
 -----
@@ -19,22 +19,23 @@ This will be most applicable to the situation of someone who buys and sells bitc
 
 Further Context
 ---------------
-I am the child of an certified public accountant. I worked as a tax preparer for a tax-prep franchise in the United States. Beyond these experiences, I have had no formal financial training; see disclaimer above.
+*Who:*
+I am the child of an certified public accountant. I worked as a tax preparer for a tax-prep franchise in the United States. I am a science/engineering/mathematics teacher with degees in phyics and physics education. Beyond these experiences, I have had no formal financial training; see disclaimer above.
 
+*Why*
 In the United States, an exchange of goods for USD is an event with tax concequences. As I understand it, an individual can choose to calculate gains and losses with regard to such exchange(s) of goods using one of three methods:
 
 1. "first-in-first-out" (FIFO)
 2. "last-in-first-out" (LIFO)
 3. "average"
 
+Because I purchased and sold quantities of bitcoin this year (2013), I want a _way_ to choose a calculation method and to accurately figure my gain/loss. This is my attempt at creating a program to accomplish such.
+
 Calculating any of these by hand (or even with a spreadsheet) can be quite tedious. If your number of transactions is greater than a dozen, software proves necessary. I have come across some attempts to automate this - but none that have clearly delineated outcomes for FIFO, LIFO, and average calculations. This is my attempt to make what I'm looking for ... and learn som Python at the same time!!
 
-Because I purchased and sold amounts of bitcoin this year (2013), I want a way to choose a calculation method and to accurately figure my gain/loss. This is my attempt at creating a program to accomplish such.
+Furthermore, in the current global economy, the only way for one's earned wealth to maintain its value is to invest (because inflation). This is a social justice issue for two reasons. First, I perceive that a majority of people (a) are unaware inflation causes their wealth to decrease and (b) have limited access to knowledge that would allow anyone to do something about this. Second, I perceive that open-sourced financial software is one element of the solution to the extremes of wealth and poverty. Because it is within my abilities to create this tool, I feel a responsibility to do so.
 
-BTC donations accepted: 1A6ujnfh6B3y82DzjWrs2vcpcFPFF13We6
-
-Goals: Track holdings of commodity/currency/stock/etc. to report gains/losses
-Limitations: Not intended for exchange between multiple currencies
+BTC donations accepted: 1A6ujnfh6B3y82DzjWrs2vcpcFPFF13We6 [Any donations will support a father providing for his family on a teacher's salary and his valiant wife dedicated to educating their children.]
 
 Current Outline of Program
 --------------------------
