@@ -12,9 +12,9 @@ Scope
 -----
 This will be most applicable to the situation of someone who buys and sells bitcoin as a commodity. If you are holding and spending BTC, this tool _might_ be applicable if you figure the fair market value at the time of spending.
 
-*Function*: Use this tool to figure gain/loss via the FIFO, LIFO, and average methods. Technically this tool can be used/modified for tracking any sort of holding (commodity, currency, bullion, stock, etc.). Similarly, any base currency can be used instead of USD.
+*Function*: Use this tool to figure gain/loss via the FIFO, LIFO, and average methods. Technically this tool can be used/modified for tracking any sort of holding (commodity, currency, bullion, stock, alpaca socks, etc.). Similarly, any base currency can be used instead of USD.
 
-*Limitation*: This is not currently designed to process exchange between currencies.
+*Limitation*: This is not currently designed to process exchange between multiple digital currencies or multiply fiat currencies.
 
 Further Context
 ---------------
@@ -78,6 +78,11 @@ Roadmap
             <ul>
               <li>Works on any desktop OS</li>
               <li>Internet connection not necessary</li>
+            </ul>
+          </li>
+          <li>Cons:
+            <ul>
+              <li>If Steve Jobs's is right (or if his opinion wins out), Java's relevancy will diminish over time.</li>
             </ul>
           </li>
         </ul>
