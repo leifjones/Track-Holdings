@@ -79,7 +79,9 @@ Roadmap
         <ul>
           <li>Pros:
             <ul>
-              <li>Google Spreadsheet integration via Google Apps Script</li>
+              <li>Google Spreadsheet integration via Google Apps Script
+                <ul><li>Duplicable form for entering transactions that auto populate transaction list</li></ul>
+              </li>
               <li>In-browser, accessible anywhere, on any device</li>
             </ul>
           </li>
