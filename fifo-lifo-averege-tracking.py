@@ -1,3 +1,8 @@
+from __future__ import division
+import csv
+import math
+
+
 '''
 Read input.
 Store in arrays.
@@ -24,8 +29,6 @@ In order for FIFO and LIFO to methods to be calculated currectly, transactions m
 (Oldest transactions first. Newest transactions last.
 '''
 
-import csv
-import math
 
 # Validation??
 
@@ -91,9 +94,9 @@ class Holding:
 # AvgHolding class extends Holding class, adding weight
 
 # INITIALIZE META-LISTS
-holdings_fifo = [[],0] # [list of holdings], gain/loss
-holdings_lifo = [[],0] # [list of holdings], gain/loss
-holdings_avg = [[],0] # [list of holdings], gain/loss
+holdings_fifo = [[],float(0)] # [list of holdings], gain/loss
+holdings_lifo = [[],float(0)] # [list of holdings], gain/loss
+holdings_avg = [[],[],float(0)] # [list of holdings], gain/loss
 
 # METHODS
 
@@ -217,23 +220,33 @@ def removeFromHoldings_avg(t):
     quantity = -t.getQuant() # Negative sign because sales are entered as negative. Take postive value for local handling.
     price = t.getPrice()
     fees = t.getTotalFees()
-
-    gainLoss = 0
-
-    # assign proportional portions of the transaction to each holding:
     
-    # update holdings
-    transactionFullyAccountedFor = False
-    while transactionFullyAccountedFor != True:
-        # for each AvgHolding in list:
-            # multiply(each.getWeight(), quantity)
-            # subtract that value from the AvgHolding.quantity
-            # ????? to update price
-            # subtract quant from leftToProcess variable
-        #check whether leftToProcess variable = 0. if not, error
-        transactionFullyAccountedFor = True
+    print "COMPUTING WEIGHTS ..."
+    holdings_avg[1] = [] # clear list of weights
+    quantSum = float(0) # initialize vairable for quantity of BTC held
+    for h in holdings_avg[0]:
+        quantSum += float(h.getQuant())
+    print "Total BTC held: {}".format(quantSum)
+    print "Cycling through holdings ..."
+    # SUBTRACT PORTION OF TRANSACTION FROM EACH HOLDING
+    for i in range(len(holdings_avg[0])):
+        # Log eight of each holding (out of 1)
+        currentWeight = holdings_avg[0][i].getQuant() / quantSum
+        holdings_avg[1].append(currentWeight) # Logging for debug purposes
+        print "Proportion of holding #{}: {} BTC {} BTC".format(i+1,currentWeight,holdings_avg[1][i])
 
-    holdings_avg[1] += myRound(gainLoss,8)
+        # Calculated gain/loss
+        gainLoss = (quantity * price) - (quantity * holdings_avg[0][i].getBasis()) # Re assign this for each holding processed
+        print "Gain/Loss for this sale: ${}".format(myRound(gainLoss,2))
+
+        # Pass gain/loss for associated with this holding to the total gainLoss
+        holdings_avg[2] += myRound(gainLoss * currentWeight,8)
+
+        #Subtract proportion of transaction from this holding
+        print "Amount to subtract from holding #{}: {} of {} BTC = {} BTC".format(i+1,currentWeight,quantity,currentWeight*quantity)
+        holdings_avg[0][i].subtractX(currentWeight*quantity)
+        print "Amount left in that holding: {} BTC".format(holdings_avg[0][i].getQuant())
+
 
 # Calculate gain/loss
 
@@ -299,7 +312,7 @@ print "Current holdings: " + str(total_holdings) + " BTC. If this does not match
 # Print or write gain/loss
 print "FIFO Gain/Loss: ${}".format(holdings_fifo[1])
 print "LIFO Gain/Loss: ${}".format(holdings_lifo[1])
-print "Average Gain/Loss: ${}".format(holdings_avg[1])
+print "Average Gain/Loss: ${}".format(holdings_avg[2])
 
 #troubleshooting
 index = 1

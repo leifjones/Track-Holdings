@@ -1,5 +1,5 @@
-Track-Holdings Alpha (Pre-0.1)
-==============================
+Track-Holdings v0.1
+===================
 
 #### DISCLAIMER
 _While I make every effort to provide an quality script, I make no assurances. Under *no circumstances* does this tool serve as a substitute for the professional advice of an accountant and your own research, calculations, and decision-making. By using this tool, you claim all responsibility for the results of choices made after using this tool._
@@ -46,13 +46,14 @@ Current Outline of Program
 
 Roadmap
 -------
-0.1
-* ~~Read transaction data~~
-* ~~Create objects to represent holdings~~
-* Track price of each holding: ~~FIFO~~, ~~LIFO~~, AVG
-* Report gain/loss: FIFO, LIFO, AVG
+0.1 - Completed: December 23, 2013
+* **Read transaction data**
+* **Create objects to represent holdings**
+* **Track price of each holding: FIF0, LIFO, AVG**
+* **Report gain/loss: FIFO, LIFO, AVG**
 
 0.2
+* Format output
 * Allow for starting positions
 * Report amount that current scenario adds to (or reduces) tax owed to IRS based on assumed tax bracket
 
