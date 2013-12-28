@@ -97,16 +97,17 @@ class Holding:
 holdings_fifo = [[],float(0)] # [list of holdings], gain/loss
 holdings_lifo = [[],float(0)] # [list of holdings], gain/loss
 holdings_avg = [[],[],float(0)] # [list of holdings], gain/loss
+holdings_AVG = [] # total quant & average price
 
 # METHODS
 
 # Read
 def read():
-    print "READING TRANSACTIONS FILE ..."
+    # print "READING TRANSACTIONS FILE ..."
     ifile  = open('sample-transactions.csv', "rU")
     reader = csv.reader(ifile)
 
-    print "GENERATING TRANSACTION list ..."
+    # print "GENERATING TRANSACTION list ..."
     for row in reader:
         quantity = row[0] # first collumn
         price = row[1] # 2nd collomn
@@ -144,29 +145,29 @@ def removeFromHoldings_fifo(t):
         holdingQuant = holdings_fifo[0][0].getQuant()
         holdingBasis = holdings_fifo[0][0].getBasis()
         if holdingQuant == quantity:
-            print "Quantity matches amt in first holding. REMOVING & UPDATING GAIN/LOSS ..."
-            print "{14.8f}".format(quantity*holdingBasis)
-            print "{14.8f}".format(quantity*price)
+             #print "Quantity matches amt in first holding. REMOVING & UPDATING GAIN/LOSS ..."
+            # print "{14.8f}".format(quantity*holdingBasis)
+            # print "{14.8f}".format(quantity*price)
             gainLoss += myRound(quantity*price - quantity*holdingBasis,8)
-            print "{14.8f}".format(gainLoss)
+            # print "{14.8f}".format(gainLoss)
             holdings_fifo[0].pop(0)
             transactionFullyAccountedFor = True # Done with removing.
         elif quantity < holdingQuant:
-            print "Quantity is smaller than amt in first holding. SUBTRACTING & UPDATING GAIN/LOSS..."
-            print "Holding value was {}. SUBTRACTING {:.8f} ...".format(holdingQuant,quantity)
-            print quantity*holdingBasis
-            print quantity*price
+            # print "Quantity is smaller than amt in first holding. SUBTRACTING & UPDATING GAIN/LOSS..."
+            # print "Holding value was {}. SUBTRACTING {:.8f} ...".format(holdingQuant,quantity)
+            # print quantity*holdingBasis
+            # print quantity*price
             gainLoss += myRound(quantity*price - quantity*holdingBasis,8)
-            print gainLoss
+            # print gainLoss
             holdings_fifo[0][0].subtractX(quantity)
-            print "Holding value is now {}.".format(str(holdings_fifo[0][0].getQuant()))
+            # print "Holding value is now {}.".format(str(holdings_fifo[0][0].getQuant()))
             transactionFullyAccountedFor = True # Done with removing.
         else: # Quantity sold exceeds value of the first remaining holding
-            print "Quantity excedes amt in first holding. REMOVING and REPEATING ..."
-            print quantity*holdingBasis
-            print quantity*price
+            # print "Quantity excedes amt in first holding. REMOVING and REPEATING ..."
+            # print quantity*holdingBasis
+            # print quantity*price
             gainLoss += myRound(quantity*price - quantity*holdingBasis,8)
-            print gainLoss
+            # print gainLoss
             quantity -= holdingQuant
             holdings_fifo[0].pop(0)
             # NOT done with removing. Continue.
@@ -187,29 +188,29 @@ def removeFromHoldings_lifo(t):
         holdingQuant = holdings_lifo[0][-1].getQuant()
         holdingBasis = holdings_fifo[0][0].getBasis()
         if holdingQuant == quantity:
-            print "Quantity matches amt in last holding. REMOVING ..."
-            print (quantity*holdingBasis)
-            print (quantity*price)
+            # print "Quantity matches amt in last holding. REMOVING ..."
+            # print (quantity*holdingBasis)
+            # print (quantity*price)
             gainLoss += myRound(quantity*price - quantity*holdingBasis,8)
-            print format(gainLoss)
+            # print format(gainLoss)
             holdings_lifo[0].pop(-1)
             transactionFullyAccountedFor = True # Done with removing.
         elif quantity < holdingQuant:
-            print "Quantity is smaller than amt in last holding. SUBTRACTING ..."
-            print "Holding value was {}. SUBTRACTING {:.8f} ...".format(holdingQuant,quantity)
-            print (quantity*holdingBasis)
-            print (quantity*price)
+            # print "Quantity is smaller than amt in last holding. SUBTRACTING ..."
+            # print "Holding value was {}. SUBTRACTING {:.8f} ...".format(holdingQuant,quantity)
+            # print (quantity*holdingBasis)
+            # print (quantity*price)
             gainLoss += myRound(quantity*price - quantity*holdingBasis,8)
-            print (gainLoss)
+            # print (gainLoss)
             holdings_lifo[0][-1].subtractX(quantity)
-            print "Holding value is now {}.".format(str(holdings_lifo[0][-1].getQuant()))
+            # print "Holding value is now {}.".format(str(holdings_lifo[0][-1].getQuant()))
             transactionFullyAccountedFor = True # Done with removing.
         else: # Quantity sold exceeds value of the first remaining holding
-            print "Quantity excedes amt in last holding. REMOVING and REPEATING ..."
-            print (quantity*holdingBasis)
-            print (quantity*price)
+            # print "Quantity excedes amt in last holding. REMOVING and REPEATING ..."
+            # print (quantity*holdingBasis)
+            # print (quantity*price)
             gainLoss += myRound(quantity*price - quantity*holdingBasis,8)
-            print (gainLoss)
+            # print (gainLoss)
             quantity -= holdingQuant
             holdings_lifo[0].pop(-1)
             # NOT done with removing. Continue.
@@ -221,31 +222,31 @@ def removeFromHoldings_avg(t):
     price = t.getPrice()
     fees = t.getTotalFees()
     
-    print "COMPUTING WEIGHTS ..."
+    # print "COMPUTING WEIGHTS ..."
     holdings_avg[1] = [] # clear list of weights
     quantSum = float(0) # initialize vairable for quantity of BTC held
     for h in holdings_avg[0]:
         quantSum += float(h.getQuant())
-    print "Total BTC held: {}".format(quantSum)
-    print "Cycling through holdings ..."
+    # print "Total BTC held: {}".format(quantSum)
+    # print "Cycling through holdings ..."
     # SUBTRACT PORTION OF TRANSACTION FROM EACH HOLDING
     for i in range(len(holdings_avg[0])):
         # Log eight of each holding (out of 1)
         currentWeight = holdings_avg[0][i].getQuant() / quantSum
         holdings_avg[1].append(currentWeight) # Logging for debug purposes
-        print "Proportion of holding #{}: {} BTC {} BTC".format(i+1,currentWeight,holdings_avg[1][i])
+        # print "Proportion of holding #{}: {} BTC {} BTC".format(i+1,currentWeight,holdings_avg[1][i])
 
         # Calculated gain/loss
         gainLoss = (quantity * price) - (quantity * holdings_avg[0][i].getBasis()) # Re assign this for each holding processed
-        print "Gain/Loss for this sale: ${}".format(myRound(gainLoss,2))
+        # print "Gain/Loss for this sale: ${}".format(myRound(gainLoss,2))
 
         # Pass gain/loss for associated with this holding to the total gainLoss
         holdings_avg[2] += myRound(gainLoss * currentWeight,8)
 
         #Subtract proportion of transaction from this holding
-        print "Amount to subtract from holding #{}: {} of {} BTC = {} BTC".format(i+1,currentWeight,quantity,currentWeight*quantity)
+        # print "Amount to subtract from holding #{}: {} of {} BTC = {} BTC".format(i+1,currentWeight,quantity,currentWeight*quantity)
         holdings_avg[0][i].subtractX(currentWeight*quantity)
-        print "Amount left in that holding: {} BTC".format(holdings_avg[0][i].getQuant())
+        # print "Amount left in that holding: {} BTC".format(holdings_avg[0][i].getQuant())
 
 
 # Calculate gain/loss
@@ -276,30 +277,30 @@ total_holdings = 0
 
 transactionNum = 1
 for i in transactions:
-    print "PROCESSING TRANSACTION #{} ...".format(str(transactionNum))
-    print i
+    # print "PROCESSING TRANSACTION #{} ...".format(str(transactionNum))
+    # print i
     quantity = i.getQuant()
     total_holdings += quantity # Update holdings
     if quantity > 0:
-        print "Transaction #{} is a buy. ADDING TO HOLDINGS ...".format(str(transactionNum))
+        # print "Transaction #{} is a buy. ADDING TO HOLDINGS ...".format(str(transactionNum))
         addToHoldings(i)
     else:
-        print "Transaction #{} is a sell. SUBTRACTING FROM HOLDINGS ...".format(str(transactionNum))
-        print "Starting rfh-FIFO..."
+        # print "Transaction #{} is a sell. SUBTRACTING FROM HOLDINGS ...".format(str(transactionNum))
+        # print "Starting rfh-FIFO..."
         removeFromHoldings_fifo(i)
-        print "\nStarting rfh-LIFO..."
+        # print "\nStarting rfh-LIFO..."
         removeFromHoldings_lifo(i)
-        print "\nStarting rfh-AVG..."
+        # print "\nStarting rfh-AVG..."
         removeFromHoldings_avg(i)
     
-    print "FIFO"
-    printHoldings(holdings_fifo[0])
+    # print "FIFO"
+    # printHoldings(holdings_fifo[0])
     # Calculate and print gain/loss
-    print "LIFO"
-    printHoldings(holdings_lifo[0])
+    # print "LIFO"
+    # printHoldings(holdings_lifo[0])
     # Calculate and print gain/loss
-    print "Average"
-    printHoldings(holdings_avg[0])
+    # print "Average"
+    # printHoldings(holdings_avg[0])
     # Calculate and print gain/loss
 
     transactionNum += 1
@@ -314,12 +315,3 @@ print "FIFO Gain/Loss: ${}".format(holdings_fifo[1])
 print "LIFO Gain/Loss: ${}".format(holdings_lifo[1])
 print "Average Gain/Loss: ${}".format(holdings_avg[2])
 
-#troubleshooting
-index = 1
-
-for t in transactions:
-    print str(index) + ": Quantity: " + str(t.quantity) + "\n"
-    index += 1
-
-
-# print holdings_fifo[1].getBasis()
