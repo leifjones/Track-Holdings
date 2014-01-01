@@ -1,16 +1,7 @@
 from __future__ import division
+import sys
 import csv
 import math
-
-
-'''
-Read input.
-Store in arrays.
-for each transaction:
-    create object
-
-
-'''
 
 '''
 CSV FORMAT
@@ -29,17 +20,14 @@ In order for FIFO and LIFO to methods to be calculated currectly, transactions m
 (Oldest transactions first. Newest transactions last.
 '''
 
-
-# Validation??
-
-
-# round to X decimal places
-def myRound(num,base):
-    return float( round( num * (10**base) ) ) / (10**base)
+# round to N decimal places
+def myRound(num,N):
+    return float( round( num * (10**N) ) ) / (10**N)
 
 # transaction class
 
-# REWORK TO ALLOW FOR ALTERNATE CONSTRUCTOR - BASED ON AMT SPEND AND AMT RECEIVED (TO SIMPLIFY FEES ISSUES)
+# ALTERNATE CONSTRUCTOR? - BASED ON AMT SPEND AND AMT RECEIVED (TO SIMPLIFY FEES ISSUES)
+ID = 1
 class Transaction:
     def __init__(self,q,p,f,xf):
         self.quantity = myRound(float(q),8) #BTC
@@ -47,15 +35,16 @@ class Transaction:
         self.fee = float(f) # in USD
         self.xfer = float(xf) # For example, bank transfer fee. Not part of cost basis. (in USD)
         # self.date = d
-        # self.id = id # id number
+        self.id = ID # id number
+        ID += 1
 
     def __repr__(self):
         if self.quantity == 0:
             return "Empty transaction!"
         elif self.quantity > 0:
-            return "Buy: {} BTC for a price of ${} per bitcoin.".format(str(self.quantity),str(self.price))
+            return "Transaction #{}. Buy: {} BTC for a price of ${} per bitcoin.".format(str(self.id),str(self.quantity),str(self.price))
         else:
-            return "Sale: {} BTC at price of ${} per bitcoin.".format(str(self.quantity),str(self.price))
+            return "Transaction #{}. Sale: {} BTC at price of ${} per bitcoin.".format(str(self.id),str(self.quantity),str(self.price))
 
     def getQuant(self):
         return self.quantity
@@ -102,12 +91,13 @@ holdings_AVG = [] # total quant & average price
 # METHODS
 
 # Read
+file = 'sample-transactions.csv'
 def read():
-    # print "READING TRANSACTIONS FILE ..."
-    ifile  = open('sample-transactions.csv', "rU")
+    # READ TRANSACTIONS FILE
+    ifile  = open(file, "rU")
     reader = csv.reader(ifile)
 
-    # print "GENERATING TRANSACTION list ..."
+    # GENERATE TRANSACTION LIST
     for row in reader:
         quantity = row[0] # first collumn
         price = row[1] # 2nd collomn
@@ -262,7 +252,7 @@ def removeFromHoldings_avg(t):
 def printHoldings(list): # Pass in list of holdings.
     i = 1
     for holding in list:
-        print "{0}. Number of units: {1:14.8f} BTC.  Basis cost: {2:10.2f} USD per BTC".format(i,holding.getQuant(),holding.getBasis())
+        print "			{0}. Number of units: {1:14.8f} BTC.  Basis cost: {2:10.2f} USD per BTC".format(i,holding.getQuant(),holding.getBasis())
         # Increase the "14" if scaling to larger 4 figure holdings.
         i += 1
 
