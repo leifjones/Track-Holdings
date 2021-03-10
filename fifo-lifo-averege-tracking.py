@@ -156,7 +156,7 @@ def removeFromHoldings_fifo(t):
             # print "Quantity excedes amt in first holding. REMOVING and REPEATING ..."
             # print quantity*holdingBasis
             # print quantity*price
-            gainLoss += myRound(quantity*price - quantity*holdingBasis,8)
+            gainLoss += myRound(holdingQuant*price - holdingQuant*holdingBasis,8)
             # print gainLoss
             quantity -= holdingQuant
             holdings_fifo[0].pop(0)
@@ -176,7 +176,7 @@ def removeFromHoldings_lifo(t):
         # Check if there are enough in first holding
             # if exactly enough, remove first holding & done w/ removing holdings
         holdingQuant = holdings_lifo[0][-1].getQuant()
-        holdingBasis = holdings_fifo[0][0].getBasis()
+        holdingBasis = holdings_lifo[0][0].getBasis()
         if holdingQuant == quantity:
             # print "Quantity matches amt in last holding. REMOVING ..."
             # print (quantity*holdingBasis)
@@ -199,7 +199,7 @@ def removeFromHoldings_lifo(t):
             # print "Quantity excedes amt in last holding. REMOVING and REPEATING ..."
             # print (quantity*holdingBasis)
             # print (quantity*price)
-            gainLoss += myRound(quantity*price - quantity*holdingBasis,8)
+            gainLoss += myRound(holdingQuant*price - holdingQuant*holdingBasis,8)
             # print (gainLoss)
             quantity -= holdingQuant
             holdings_lifo[0].pop(-1)
